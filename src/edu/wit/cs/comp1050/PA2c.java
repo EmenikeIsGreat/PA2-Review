@@ -1,9 +1,20 @@
 package edu.wit.cs.comp1050;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-//TODO: document this class
+/**
+ * The solution to the third part  
+ * 
+ * Not as many comments as previous PA 
+ * Due to straight forward program
+ * But also
+ * 
+ * @author Edgar Romero
+ *
+ */
 public class PA2c {
 	
 	/**
@@ -60,8 +71,23 @@ public class PA2c {
 	 * @return true if m1 x m2 is legal
 	 */
 	public static boolean canMultiply(int[][] m1, int[][] m2) {
-		return false;
-	}
+		//If array is empty multiplication not possible
+		if(m1.length == 0 || m2.length == 0 ){ 
+	    	
+			return false;
+	    }
+		int m1Col = m1[0].length; // m1 columns length
+	    int m2Row = m2.length;    // m2 rows length
+	
+	    /**
+	    * can multiply if the number of columns in m1 == m2.length.
+	    * Otherwise, the product of two matrices is undefined.
+	    */
+
+	    if(m1Col == m2Row) return true; 
+		
+	    return false;
+    }
 	
 	/**
 	 * Reads and returns a matrix from a scanner
@@ -85,7 +111,24 @@ public class PA2c {
 	 * @return resulting matrix
 	 */
 	public static int[][] readMatrix(Scanner s) {
-		return null;
+		// reads the rows entered 
+		int rowsInM = s.nextInt();
+		// reads the columns entered 
+		int columnsInM = s.nextInt();
+		
+		// creates a matrix from values
+		int[][] a = new int[rowsInM][columnsInM];
+		
+		/**
+		 * Matrix values read from previous dimensions input 
+		 */
+		for (int i = 0; i < a.length; i++) { 
+	           for (int j = 0; j < a[0].length; j++) { 
+	               a[i][j] = s.nextInt();
+	           }       
+		}
+
+		return a;
 	}
 	
 	/**
@@ -97,7 +140,28 @@ public class PA2c {
 	 * @return result of m1 x m2
 	 */
 	public static int[][] matrixMultiply(int[][] m1, int[][] m2) {		
-		return null;
+		
+		int m1Col = m1[0].length; // m1 columns length
+		int m3Row = m1.length;    // the resulted matrix's rows length
+		int m3Col = m2[0].length; // the resulted matrix's columns length
+		
+		int[][] m3 = new int[m3Row][m3Col];
+		
+		/**
+		 * performs the adding of every element in
+		 * a row of m1 multiplied by the corresponding element in the
+		 * corresponding column of m2, for all columns in m1 and all rows in m1
+		 */
+		
+		for(int i = 0; i < m3Row; i++) {         		// rows from m1
+			for(int j = 0; j < m3Col; j++) {     		// columns from m2
+				for(int k = 0; k < m1Col; k++) { 		// columns from m1
+					m3[i][j] += m1[i][k] * m2[k][j];
+				}
+			}
+		}
+		
+		return m3;	
 	}
 	
 	/**
@@ -112,6 +176,75 @@ public class PA2c {
 	 */
 	public static void main(String[] args) {
 		// Hint: paths should be read as an entire line!
-	}
+		Scanner input = new Scanner(System.in);
 
+		// matrix 1 read
+		System.out.print("Enter path for matrix 1: ");
+		String matrix1= input.nextLine();
+		
+		// matrix 2 read
+		System.out.print("Enter path for matrix 2: ");
+		String matrix2 = input.nextLine();
+		
+		// finds file for result 
+		System.out.print("Enter path for result: ");
+		String matrixResult = input.nextLine();;
+		
+		
+		
+		File m1 = new File(matrix1);
+		File m2 = new File(matrix2);
+		File m3 = new File(matrixResult);
+			try {
+				// all files must exist first 
+				if (!m1.exists() || !m2.exists() || !m3.exists() ) {
+					throw new FileNotFoundException();
+				}
+				
+				
+				/**
+				 * Even with an extra day, I was left a bit confused 
+				 * Print statements were supplied but
+				 * I was using incorrectly as it did not print out both
+				 */
+				
+				// Scanner will read file m1.txt
+				Scanner FirstMatrix= new Scanner(m1);
+				
+				// Scanner will read file m2.txt
+				Scanner SecondMatrix = new Scanner(m2);
+				
+			
+				//Checks first if the matrixes can be multiplied 
+				if (canMultiply(readMatrix(FirstMatrix), readMatrix(SecondMatrix)) == false) {
+					System.exit(0);
+					// If they can't IT SHOULD (?) print out the matrices
+					printMatrix(readMatrix(FirstMatrix));
+					System.out.println("X");
+					printMatrix(readMatrix(SecondMatrix)); 
+					System.out.println("=");
+					System.out.println(ERR_DIMS);
+					//printMatrix(int[][] m, PrintWriter pw)
+					System.exit(0);
+				
+				} else {
+//					matrixMultiply(readMatrix(FirstMatrix), readMatrix(SecondMatrix));
+//					printMatrix(readMatrix(FirstMatrix));
+//					System.out.println("X");
+//					printMatrix(readMatrix(SecondMatrix)); 
+//					System.out.println("=");
+					
+					System.exit(0);
+					//printMatrix(int[][] m, PrintWriter pw)
+					
+				}
+			 // Realize this catch is giving me trouble.. not sure what the exception is though 
+			} catch (Exception ex) {
+				System.out.printf(ERR_FILE + "%n");
+			}
+		} 
+		
 }
+	
+
+
